@@ -1,0 +1,90 @@
+
+[genesis.json 파일로 네트워크 설정]
+geth --datadir D:\data_testnet init D:\data_testnet/genesis.json
+
+------------------------------
+geth --networkid 5704 --fast --datadir D:\data_testnet --rpc --rpcaddr "127.0.0.1" --rpcport 8545 --rpccorsdomain "*" --rpcapi "admin,miner,debug,shh,txpool,db,net,eth,web3,personal" console 2>> NUL
+
+geth --networkid 5704 --fast --datadir D:\data_testnet --unlock 0 --rpc --rpcaddr "127.0.0.1" --rpcport 8545 --rpccorsdomain "*" --rpcapi "admin,miner,debug,shh,txpool,db,net,eth,web3,personal" console 2>> NUL
+
+geth --networkid 5704 --datadir D:\data_testnet --unlock 0 --rpc --rpcaddr "127.0.0.1" --rpcport 8545 --rpccorsdomain "*" --rpcapi "admin,miner,debug,shh,txpool,db,net,eth,web3,personal" console 2>> NUL
+
+geth --networkid 5704 --datadir D:\data_testnet --rpc --rpcaddr "127.0.0.1" --rpcport 8545 --rpccorsdomain "*" --rpcapi "admin,miner,debug,shh,txpool,db,net,eth,web3,personal" console 2>> NUL
+
+geth --networkid 5704 --fast --datadir D:\data_testnet --rpc --rpcaddr "127.0.0.1" --rpcport 8545 --rpccorsdomain "*" --rpcapi "admin,miner,debug,shh,txpool,db,net,eth,web3,personal" console 2>> D:\data_testnet\geth.log
+
+geth --networkid 5704 --fast --datadir D:\data_testnet --unlock 0 --rpc --rpcaddr "127.0.0.1" --rpcport 8545 --rpccorsdomain "*" --rpcapi "admin,miner,debug,shh,txpool,db,net,eth,web3,personal" console 2>> D:\data_testnet\geth.log
+
+[로컬에서 geth를 실행하는 명령어]
+geth --networkid 5704 --datadir D:\data_testnet console 2>> D:\data_testnet\geth.log
+
+[프라이빗 네트워크 상에서 geth를 실행하는명령어]
+geth --networkid 5704 --datadir D:\data_testnet --bootnodes "enode://9691a695defe7ca4c249332ef0b415380b8db50d86d560eb3160cec9c591b94586b198e75b99c1b26010ad4c58cf472743937e00404d17510346ae3a7b188d48@121.128.151.147:30303" console 2>> D:\data_testnet\geth.log
+
+같은 네트워크에 접속하려면
+네트워크 id와 genesis.json 파일이 같아야 한다.
+
+공유기를 쓰는 환경이라면 
+공유기의 30303 포트를 채굴하는 컴퓨터로 포트포워딩 설정 필요
+
+[geth 개발용 실행 명령어(네트워크 상에 실제로 코드 올릴때)]
+geth --networkid 5704 --datadir D:\data_testnet --mine --minerthreads 1 --rpc --rpcaddr "127.0.0.1" --rpcport 8545 --rpccorsdomain "*" --rpcapi "db,net,eth,web3,personal" --unlock 0 --bootnodes "enode://9691a695defe7ca4c249332ef0b415380b8db50d86d560eb3160cec9c591b94586b198e75b99c1b26010ad4c58cf472743937e00404d17510346ae3a7b188d48@121.128.151.147:30303" console 2>> NUL
+
+
+geth --networkid 5704 --datadir D:\data_testnet --mine --minerthreads 1 --rpc --rpcaddr "127.0.0.1" --rpcport 8545 --rpccorsdomain "*" --rpcapi "db,net,eth,web3,personal" --unlock 0 --bootnodes "enode://f6d6d8e3b93095fe60dc3ffaea3515987f5f074156aec4345b57b5321d0cd325776b2273028f17b371aec92963520655f7831faa375525978b728bc6667949f7@121.128.151.147:30303" console 2>> D:\data_testnet\geth.log
+
+이렇게 geth 실행하고
+http://remix.ethereum.org/
+접속해서 코드 올림
+
+------------------------------
+
+[계정 생성]
+personal.newAccount("비밀번호 입력")
+
+[기본 계정 정보]
+eth.coinbase
+
+[생성된 block 번호]
+eth.blockNumber
+
+[계정 잔고 확인]
+eth.getBalance(eth.accounts[0])
+web3.fromWei(eth.getBalance(eth.accounts[0]),"ether")
+
+------------------------------
+
+[자신의 enode 값 확인]
+admin.nodeInfo.enode
+
+[타인 노드 정적 등록]
+admin.addPeer("타인 노드의 enode 값 입력")
+
+[등록된 peer 확인]
+admin.peers
+
+------------------------------
+
+[채굴용 계좌 선택]
+miner.setEtherbase(eth.accounts[0])
+
+[채굴 시작]
+miner.start(1)
+
+[채굴 중단]
+miner.stop()
+
+[채굴중 여부 확인]
+eth.mining
+
+-------------------------------
+
+[송금전 계정 잠금 해제]
+personal.unlockAccount(eth.accounts[0], "비밀번호 입력", 0)
+
+[상대방에게 송금하기]
+eth.sendTransaction({from:eth.accounts[0], to:"상대방 주소", value:web3.toWei(10,"ether")})
+
+-------------------------------
+[geth.log 보는 방법, 윈도우 파워쉘 실행 후]
+Get-Content D:\data_testnet\geth.log -Wait -Tail 1000
